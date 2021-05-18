@@ -5,6 +5,7 @@ The [Lojban][0] language is supposed to be machine-parsable, so let's use that t
 * Syntax highlighting.
 * Dialect rewriting.
 * Core meaning extraction.
+* Terminator elision/insertion.
 
 Most of the Lojban conversations happen on the [roljbogu'e Discord server][1].  Join us there!
 
