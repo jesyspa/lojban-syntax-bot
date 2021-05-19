@@ -67,9 +67,11 @@ pCVRun stop schwa = go <$> pConsonantRep stop schwa <*> pVowelRep schwa
 -- * We start by assuming what we're seeing is a brivla.
 -- * If we see more than one consonant in the first or second syllable (schwa counts as
 --   a consonant for the second), that means we're right!  This whole thing is a brivla.
--- * If we can't identify it as a brivla, don't consume 
+--   - This necessarily breaks things like {lobroda}!  We need a separate check there.
+-- * If we can't identify it as a brivla, try viewing it as a cmavo instead.
+-- * If it doesn't work even as a cmavo, just eat the whole word (up to whitespace) as a cmevla.
 --
--- TODO: Implemnet the slinku'i and tosmabru tests (ki'e doi la ziren).
+-- TODO: Implement the slinku'i and tosmabru tests (ki'e doi la ziren).
 pValsi, pBrivla, pCmavo, pCmevla :: ReadP Valsi
 pValsi = pBrivla <++ pCmavo <++ pCmevla
 pCmevla = go <$> P.munch1 (not . isSpace)
