@@ -1,0 +1,47 @@
+name:                lojban-syntax-bot
+version:             0.1.0.0
+github:              "jesyspa/lojban-syntax-bot"
+license:             MIT
+author:              "Anton Golov"
+maintainer:          "jesyspa@gmail.com"
+copyright:           "2021 Anton Golov"
+
+extra-source-files:
+- README.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/jesyspa/lojban-syntax-bot#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+executables:
+  lojban-syntax-bot-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - lojban-syntax-bot
+
+tests:
+  lojban-syntax-bot-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - lojban-syntax-bot
