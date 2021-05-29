@@ -107,9 +107,10 @@ isMultiConsonant :: CVRun -> Bool
 isMultiConsonant (CVRun cs _) = length cs > 1
 
 splitIntoWords :: [CVRun] -> [[CVRun]]
+splitIntoWords cs | all isSchwaLetteral cs = map return cs
 splitIntoWords [] = []
 splitIntoWords [cv] = [[cv]]
-splitIntoWords a@(cv:dv:cvs) | isSchwaLetteral cv = error "Schwa letterals are not allowed at the beginning of a word."
+splitIntoWords a@(cv:dv:cvs) | isSchwaLetteral cv = error "Schwa letterals are not allowed at the beginning of a non-letteral word."
                              | isMultiConsonant cv = [a]
                              | isSchwaLetteral dv = [a]
                              | null cvs && isMultiConsonant dv = [a]
