@@ -3,6 +3,7 @@ module Lexer where
 import qualified Text.ParserCombinators.ReadP as P
 import Text.ParserCombinators.ReadP (ReadP, (<++))
 import Data.Char (isSpace)
+import ReadPUtils
 
 data CVRun = CVRun { consonants :: String, vowels :: String, user_cv_rep :: String } deriving (Eq, Ord, Read, Show)
 data Valsi = Valsi { internal_rep :: String, user_rep :: String } deriving (Eq, Ord, Read, Show)
@@ -21,24 +22,6 @@ isBrivlaInitial cvrun = length (consonants cvrun) > 1
 concatCVRuns :: [CVRun] -> Valsi
 concatCVRuns = foldr go (Valsi [] [])
     where go (CVRun cs vs cvur) (Valsi ir vur) = Valsi (cs ++ vs ++ ir) (cvur ++ vur)
-
--- Some redefinitions that avoid backtracking.
-strictOption :: a -> ReadP a -> ReadP a
-strictOption a p = p <++ return a
-
-pCons :: ReadP a -> ReadP [a] -> ReadP [a]
-pCons a as = (:) <$> a <*> as
-
--- Note: don't use on a parser that accepts the empty string or you'll have a bad time.
-genMunch :: ReadP a -> ReadP [a]
-genMunch a = strictOption [] $ pCons a $ genMunch a
-
-guardParse :: (a -> Bool) -> ReadP a -> ReadP a
-guardParse f p = p >>= \a -> if f a then return a else P.pfail
-
--- At least one of a and sep must reject the empty string.
-munchSepBy1 :: ReadP a -> ReadP sep -> ReadP [a]
-munchSepBy1 a sep = pCons a $ genMunch $ sep *> a
 
 pConsonantRep :: StopStatus -> SchwaStatus -> ReadP String
 pConsonantRep StopAllowed s = (++) <$> strictOption "" (P.string ".") <*> P.munch (isConsonant s)
