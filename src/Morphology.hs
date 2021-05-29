@@ -1,5 +1,22 @@
 module Morphology where
 
+{- This file implements an alternative morphology proposed by Ntsékees
+ - on roljbogu'e.
+ -
+ - The idea is to separate brivla into the following classes:
+ - * cluster-initial (e.g. drazu'e)
+ - * two-syllable (e.g. gismu)
+ - * multi-vowel-short-end (e.g. zu'edji)
+ - * schwa-denoted (e.g. jesyspa)
+ -
+ - This allows for a simpler rule for determining how to split a sequence of
+ - words with missing spaces (e.g. lonudrazu'e) into words.
+ -
+ - An important cost to note is that sequences of letterals under this system
+ - must be followed by a glottal stop.  This makes it possible to tell whether
+ - lony starts a lujvo or is lo + ny without looking at the lujvo as a whole.
+ -}
+
 import Data.List (intercalate)
 import qualified Text.ParserCombinators.ReadP as P
 import Text.ParserCombinators.ReadP (ReadP, (<++), munch1)
@@ -62,12 +79,6 @@ isLegalConsonantTriple a b c = and rules
                   , isLegalInitialConsonantPair b c
                   , not $ a == 'n' && devoice b == 't' && devoice c `elem` "cs"]
 
-data ParseResult = Cmavo String
-                 | Brivla String
-                 | Cmevla String
-                 | CmavoWithMore String String
-                 | Illegal
-                 deriving (Eq, Ord, Read, Show)
 
 data CVRun = CVRun { consonants :: String, vowels :: [String] }
            deriving (Eq, Ord, Read, Show)
